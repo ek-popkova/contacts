@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
-namespace ContactsDapr.Models
+namespace Accessor.Models
 {
     public class MongoDBContext : IMongoDBContext
     {

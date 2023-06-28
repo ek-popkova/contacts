@@ -1,9 +1,9 @@
-﻿using ContactsDapr.Models;
+﻿using Accessor.Models;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using System.Runtime.InteropServices;
 
-namespace ContactsDapr.Accessors
+namespace Accessor.Accessors
 {
     public class ContactService : IContactService
     {

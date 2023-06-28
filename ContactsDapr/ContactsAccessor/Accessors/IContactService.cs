@@ -1,7 +1,7 @@
-﻿using ContactsDapr.Models;
+﻿using Accessor.Models;
 
 
-namespace ContactsDapr.Accessors
+namespace Accessor.Accessors
 {
     public interface IContactService
     {

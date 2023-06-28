@@ -1,4 +1,4 @@
-﻿namespace ContactsDapr.Models
+﻿namespace Accessor.Models
 {
     public class MongoSettings
     {

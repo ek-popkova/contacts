@@ -1,9 +1,9 @@
-using ContactsDapr.Models;
+using Accessor.Models;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
-using ContactsDapr.Accessors;
+using Accessor.Accessors;
 
-namespace ContactsDapr.Controllers
+namespace Accessor.Controllers
 {
     [ApiController]
     [Route("[controller]")]
