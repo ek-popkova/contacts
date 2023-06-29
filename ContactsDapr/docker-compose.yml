@@ -1,32 +1,53 @@
 version: '3.4'
 
 services:
-  myfrontend:
-    image: ${DOCKER_REGISTRY-}myfrontend
+  contactsmanager:
+    image: ${DOCKER_REGISTRY-}contactsmanager
     build:
       context: .
-      dockerfile: MyFrontEnd/Dockerfile
-    ports:
-      - "51000:50001"
+      dockerfile: ContactsManager/Dockerfile
+    environment:
+      - ASPNETCORE_URLS=http://+:80
+      - ASPNETCORE_ENVIRONMENT=Development
+    networks:
+      - cantacts-dapr-network
 
-  myfrontend-dapr:
+  manager-dapr:
     image: "daprio/daprd:latest"
-    command: [ "./daprd", "-app-id", "MyFrontEnd", "-app-port", "80" ]
+    command: [ "./daprd", 
+        "-app-id", "ContactManager", 
+        "-app-port", "80",
+        "-app-protocol", "http",
+        "-dapr-http-port", "3500"]
     depends_on:
-      - myfrontend
-    network_mode: "service:myfrontend"
-
-  mybackend:
-    image: ${DOCKER_REGISTRY-}mybackend
+      - contactsmanager
+    network_mode: "service:contactsmanager"
+   
+  contactsaccessor:
+    image: ${DOCKER_REGISTRY-}contactsaccessor
     build:
       context: .
-      dockerfile: MyBackEnd/Dockerfile
-    ports:
-      - "52000:50001"
+      dockerfile: ContactsAccessor/Dockerfile
+    networks:
+      - cantacts-dapr-network
 
-  mybackend-dapr:
+  accessor-dapr:
     image: "daprio/daprd:latest"
-    command: [ "./daprd", "-app-id", "MyBackEnd", "-app-port", "80" ]
+    command: [ "./daprd", 
+        "-app-id", "ContactsAccessor", 
+        "-app-port", "80",
+        "-app-protocol", "http",
+        "-dapr-http-port", "3500"]
     depends_on:
-      - mybackend
-    network_mode: "service:mybackend"
+      - contactsaccessor
+    network_mode: "service:contactsaccessor"
+
+  mongodb:
+    image: mongo
+    ports:
+      - 27018:27017
+    networks:
+      - cantacts-dapr-network
+
+networks:
+   cantacts-dapr-network: 

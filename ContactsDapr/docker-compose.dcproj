@@ -6,7 +6,7 @@
     <ProjectGuid>7ecedca4-1b3c-47f8-ad10-e2ff3766d359</ProjectGuid>
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
     <DockerServiceUrl>{Scheme}://localhost:{ServicePort}/swagger</DockerServiceUrl>
-    <DockerServiceName>contactsaccessor</DockerServiceName>
+    <DockerServiceName>contactsmanager</DockerServiceName>
   </PropertyGroup>
   <ItemGroup>
     <None Include="docker-compose.override.yml">

@@ -7,16 +7,16 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
-COPY ["ContactsDapr/ContactsDapr.csproj", "ContactsDapr/"]
-RUN dotnet restore "ContactsDapr/ContactsDapr.csproj"
+COPY ["ContactsAccessor/ContactsAccessor.csproj", "ContactsAccessor/"]
+RUN dotnet restore "ContactsAccessor/ContactsAccessor.csproj"
 COPY . .
-WORKDIR "/src/ContactsDapr"
-RUN dotnet build "ContactsDapr.csproj" -c Release -o /app/build
+WORKDIR "/src/ContactsAccessor"
+RUN dotnet build "ContactsAccessor.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "ContactsDapr.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "ContactsAccessor.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "ContactsDapr.dll"]
+ENTRYPOINT ["dotnet", "ContactsAccessor.dll"]
