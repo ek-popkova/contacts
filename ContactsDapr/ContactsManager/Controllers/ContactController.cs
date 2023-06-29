@@ -42,6 +42,31 @@ namespace ContactsManager.Controllers
             }
         }
 
+        [HttpPost("/contact")]
+        public async Task<ActionResult<Contact>> AddContactAsync(Contact contact)
+        {
+            try
+            {
+                var result = await _daprClient.InvokeMethodAsync<Contact, Contact>(HttpMethod.Post, "ContactsAccessor", "/Contact/addNewContact", contact);
+
+                if (result is null)
+                {
+                    _logger.LogInformation("An error occured while adding contact to DB");
+                    return BadRequest("An error occured while adding contact to DB");
+                }
+                else
+                {
+                    _logger.LogInformation("New contact successfully added to DB");
+                    return Ok(result);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return Problem(ex.Message);
+            }
+        }
+
 
     }
 }

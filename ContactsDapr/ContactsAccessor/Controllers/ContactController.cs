@@ -2,6 +2,7 @@ using Accessor.Models;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 using Accessor.Accessors;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Accessor.Controllers
 {
@@ -19,14 +20,6 @@ namespace Accessor.Controllers
             _contactService = contactService;
         }
 
-
-        
-        //public async Task<ActionResult<IEnumerable<Contact>>> Get()
-        //{
-        //    var all = await _dbCollection.FindAsync(Builders<Contact>.Filter.Empty);
-        //    if (all is null) { return NotFound(); }
-        //    return Ok(all.ToList());
-        //}
 
         [HttpGet]
         [Route("getAllContacts")]
@@ -46,6 +39,34 @@ namespace Accessor.Controllers
                 else
                 {
                     _logger.LogInformation("List of contacts successfully retrieved from DB");
+                    return Ok(result);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return Problem(ex.Message);
+            }
+        }
+
+        [HttpPost]
+        [Route("addNewContact")]
+        public async Task<ActionResult<List<Contact>>> AddContactAsync(Contact contact)
+        {
+            try
+            {
+                _logger.LogInformation("Entered AddContactAsync method");
+
+                var result = await _contactService.AddContactAsync(contact);
+
+                if (result is null)
+                {
+                    _logger.LogInformation("An error occured while adding contact to DB");
+                    return BadRequest("An error occured while adding contact to DB");
+                }
+                else
+                {
+                    _logger.LogInformation("New contact successfully added to DB");
                     return Ok(result);
                 }
             }

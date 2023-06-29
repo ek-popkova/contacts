@@ -30,12 +30,35 @@ namespace Accessor.Accessors
             }
         }
 
+        public async Task<Contact?> AddContactAsync(Contact contact)
+        {
+            try
+            {
+                await _dbCollection.InsertOneAsync(ToDTO(contact));
+
+                return contact;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         private Contact FromDTO(ContactDTO contact)
         {
             return new Contact()
             {
                 Name = contact.name,
                 Phone = contact.phone
+            };
+        }
+
+        private ContactDTO ToDTO(Contact contact)
+        {
+            return new ContactDTO()
+            {
+                name = contact.Name,
+                phone = contact.Phone
             };
         }
     }
