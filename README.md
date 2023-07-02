@@ -22,6 +22,10 @@ The project architecture consists of the following components:
 - **Dapr**: Manages communication between the **Manager** and **Accessor** services, as well as the **RabbitMQ** queue.
 - **MongoDB**: Database used for storing and retrieving contacts.
 
+<img src="https://github.com/ek-popkova/contacts/assets/111788752/eaa76054-2993-4eae-9ff2-7a5ead898e5c" alt="Project architecture" width="500">
+
+
+
 ## :rocket: Usage
 
 The Manager service exposes the following endpoints:
