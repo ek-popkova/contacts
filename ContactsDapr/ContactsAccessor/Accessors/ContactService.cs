@@ -44,6 +44,33 @@ namespace Accessor.Accessors
             }
         }
 
+        public async Task<List<Contact>?> GetContactByPhoneAsync(string phone)
+        {
+            try
+            {
+                var result = await _dbCollection.Find(contact => contact.phone == phone).ToListAsync();
+
+                return result.Select(FromDTO).ToList();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<long> DeleteContactByPhoneAsync(string phone)
+        {
+            try
+            {
+                var result = await _dbCollection.DeleteManyAsync(contact => contact.phone == phone);
+                return result.DeletedCount;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         private Contact FromDTO(ContactDTO contact)
         {
             return new Contact()

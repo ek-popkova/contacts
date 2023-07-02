@@ -32,12 +32,39 @@ namespace Accessor.Controllers
 
                 if (result is null)
                 {
-                    _logger.LogInformation("Request from DB returned an empty list of contacts");
+                    _logger.LogInformation("An error occured while getting contacts from DB");
                     return NotFound("no contacts found");
                 }
                 else
                 {
                     _logger.LogInformation("List of contacts successfully retrieved from DB");
+                    return Ok(result);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return Problem(ex.Message);
+            }
+        }
+
+        [HttpGet("getContactByPhone/{phone}")]
+        public async Task<ActionResult<List<Contact>>> GetContactByPhoneAsync(string phone)
+        {
+            try
+            {
+                _logger.LogInformation("Entered GetContactByPhoneAsync method");
+
+                var result = await _contactService.GetContactByPhoneAsync(phone);
+
+                if (result is null)
+                {
+                    _logger.LogInformation("An error occured while getting contacts with phone number {phone} from DB", phone);
+                    return NotFound("No contacts found");
+                }
+                else
+                {
+                    _logger.LogInformation("List of contacts with phone number {phone} successfilly retrieved from DB", phone);
                     return Ok(result);
                 }
             }
@@ -67,6 +94,26 @@ namespace Accessor.Controllers
                     _logger.LogInformation("New contact successfully added to DB");
                     return Ok(result);
                 }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return Problem(ex.Message);
+            }
+        }
+
+        [HttpDelete("deleteContactByPhone/{phone}")]
+        public async Task<ActionResult<long>> DeleteContactByPhoneAsync(string phone)
+        {
+            try
+            {
+                _logger.LogInformation("Entered DeleteContactByPhoneAsync method");
+
+                var result = await _contactService.DeleteContactByPhoneAsync(phone);
+                
+                _logger.LogInformation("Successfully deleted from DB {result} contact(-s) with phone number: {phone}", result, phone);
+                return Ok(result);
+                
             }
             catch (Exception ex)
             {
