@@ -67,6 +67,23 @@ namespace ContactsManager.Controllers
             }
         }
 
+        [HttpPost("/contact-rabbitMQ")]
+        public async Task<ActionResult<Contact>> AddPhoneToQueueAsync(Contact contact)
+        {
+            try
+            {
+                await _daprClient.InvokeBindingAsync("contactqueue", "create", contact);
+
+                _logger.LogInformation("Contact sucessfully added to the queue");
+                return Ok("Contact sucessfully added to the queue");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.InnerException.Message);
+                return Problem(ex.InnerException.Message);
+            }
+        }
+
 
     }
 }

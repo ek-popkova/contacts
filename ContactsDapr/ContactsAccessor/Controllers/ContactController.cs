@@ -21,8 +21,7 @@ namespace Accessor.Controllers
         }
 
 
-        [HttpGet]
-        [Route("getAllContacts")]
+        [HttpGet("getAllContacts")]
         public async Task<ActionResult<List<Contact>>> GetAllContactsAsync()
         {
             try
@@ -49,9 +48,8 @@ namespace Accessor.Controllers
             }
         }
 
-        [HttpPost]
-        [Route("addNewContact")]
-        public async Task<ActionResult<List<Contact>>> AddContactAsync(Contact contact)
+        [HttpPost("addNewContact")]
+        public async Task<ActionResult<Contact>> AddContactAsync(Contact contact)
         {
             try
             {
@@ -77,18 +75,31 @@ namespace Accessor.Controllers
             }
         }
 
+        [HttpPost("/contactqueue")]
+        public async Task<ActionResult<Contact>> AddContactFromQueueAsync(Contact contact)
+        {
+            try
+            {
+                _logger.LogInformation("Entered AddContactFromQueueAsync method");
 
+                var result = await _contactService.AddContactAsync(contact);
 
-        //[HttpGet(Name = "GetWeatherForecast")]
-        //public IEnumerable<WeatherForecast> Get()
-        //{
-        //    return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-        //    {
-        //        Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-        //        TemperatureC = Random.Shared.Next(-20, 55),
-        //        Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-        //    })
-        //    .ToArray();
-        //}
+                if (result is null)
+                {
+                    _logger.LogInformation("An error occured while adding contact through queue to DB");
+                    return BadRequest("An error occured while adding contact through queue to DB");
+                }
+                else
+                {
+                    _logger.LogInformation("New contact successfully added through queue to DB");
+                    return Ok(result);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return Problem(ex.Message);
+            }
+        }
     }
 }

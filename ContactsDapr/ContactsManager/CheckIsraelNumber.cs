@@ -18,7 +18,7 @@ namespace ContactsManager
                 return new ValidationResult("Phone number shuold contain from 10 to 14 symbols");
             }
 
-            if (!(phone_number.StartsWith("+972") || !phone_number.StartsWith("0")))
+            if (!phone_number.StartsWith("+972") && !phone_number.StartsWith("0"))
             {
                 return new ValidationResult("Phone number should begin with +972 or 0");
             }

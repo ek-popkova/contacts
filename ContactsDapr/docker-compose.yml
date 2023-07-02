@@ -9,6 +9,8 @@ services:
     environment:
       - ASPNETCORE_URLS=http://+:80
       - ASPNETCORE_ENVIRONMENT=Development
+    depends_on:
+       - rabbitmq
     networks:
       - cantacts-dapr-network
 
@@ -18,9 +20,15 @@ services:
         "-app-id", "ContactManager", 
         "-app-port", "80",
         "-app-protocol", "http",
-        "-dapr-http-port", "3500"]
+        "-dapr-http-port", "3500",
+        "-components-path", "./dapr/components",
+        "-config", "./dapr/config.yml",
+        "-log-level", "debug"]
+    volumes:
+      - "./dapr/:/dapr"
     depends_on:
       - contactsmanager
+      - rabbitmq
     network_mode: "service:contactsmanager"
    
   contactsaccessor:
@@ -28,6 +36,8 @@ services:
     build:
       context: .
       dockerfile: ContactsAccessor/Dockerfile
+    depends_on:
+        - rabbitmq
     networks:
       - cantacts-dapr-network
 
@@ -37,9 +47,15 @@ services:
         "-app-id", "ContactsAccessor", 
         "-app-port", "80",
         "-app-protocol", "http",
-        "-dapr-http-port", "3500"]
+        "-dapr-http-port", "3500",
+        "-components-path", "./dapr/components",
+        "-config", "./dapr/config.yml",
+        "-log-level", "debug"]
+    volumes:
+      - "./dapr/:/dapr"
     depends_on:
       - contactsaccessor
+      - rabbitmq
     network_mode: "service:contactsaccessor"
 
   mongodb:
@@ -48,6 +64,14 @@ services:
       - 27018:27017
     networks:
       - cantacts-dapr-network
+
+  rabbitmq:
+    image: "rabbitmq:3-management-alpine"
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - cantacts-dapr-network 
 
 networks:
    cantacts-dapr-network: 
