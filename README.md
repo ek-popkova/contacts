@@ -1,4 +1,4 @@
-# :whale: Microservices Communication with Dapr and RabbitMQ
+# :tophat: Microservices Communication with Dapr and RabbitMQ
 
 This repository showcases the communication between microservices using Dapr and RabbitMQ. It comprises two microservices: the "Manager" service and the "Accessor" service. The application simulates a simple contacts book system, where contacts are stored and retrieved using MongoDB.
 
